@@ -78,6 +78,7 @@ $users = [
                 Students Table
               </div>
               <div class="col-12 mt-5 text-center text-primary h5">
+                  <?php if(!(empty($users))){?>
               <table class="table table-hover">
   <thead>
     <tr>
@@ -139,6 +140,7 @@ $users = [
    
   </tbody>
 </table>
+<?php } ?>
               </div>
           </div>
       </div>
