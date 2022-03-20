@@ -8,13 +8,29 @@ $reviewDgr=array_sum($_SESSION['allUserReview']);
 foreach($_SESSION['allUserReview'] as $key => $value){
   $patientReview; 
 }
+$Totalreview='';
+if($reviewDgr <=50 && $reviewDgr >=45){
+  $Totalreview ='Exceellent';
+
+}
+elseif($reviewDgr <45 && $reviewDgr >=35){
+  $Totalreview ='Very Good';
+
+}
+elseif($reviewDgr <35 && $reviewDgr >=25){
+  $Totalreview ='Good';
+
+}
+else{
+  $Totalreview ='Bad';
+}
 $Message='';
 if($reviewDgr>=(Max_Rev/2)){
   $Message="<div class='alert alert-success m-0'> Thanks</div>" ;
-  echo "success";
+  
 }else{
     $Message="<div class='alert alert-danger m-0'> Please contact the patient to find out the reason for the bad evaluation " . $_SESSION['phone'] . "</div>" ;
-    echo "fail";
+    
     
 }
 
@@ -86,7 +102,7 @@ if($reviewDgr>=(Max_Rev/2)){
                       echo 'Very Good';
                      }
                      elseif($_SESSION['allUserReview'][$i]==10){
-                      echo 'excellent';
+                      echo 'Excellent';
                      }
                      
                       ?>
@@ -99,9 +115,9 @@ if($reviewDgr>=(Max_Rev/2)){
 
                 <!--      -->
                  </tr>
-                 <tr class =" bg-primary">
+                 <tr class ="alert alert-info">
                    <td>Total Review</td>
-                   <td><?=  "goood"?></td>
+                   <td><?=  $Totalreview?></td>
                   </tr>
                   <tr class="p-0">
                    

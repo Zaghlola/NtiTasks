@@ -7,11 +7,16 @@ if($_POST){
     if(empty($_POST['phone']) ){
         $errors['phone_required']="<div class='text-danger font-weight-bold'> Phone Is Required </div>";
     }
+    if(!(strlen($_POST['phone'])==11 ) && !(empty($_POST['phone']))){
+       
+        $errors['warning_phone']="<div class='text-danger font-weight-bold'> Please Enter valid number </div>";
+
+    }
 
     if(empty($errors)){
     $_SESSION['phone']=$_POST['phone'];
-   
-    header('location:review.php');die;
+    header ('location:review.php');
+  
     }
 
 
@@ -54,6 +59,9 @@ if($_POST){
                <?php
                 if(isset($errors['phone_required'])){
                     echo $errors['phone_required'];
+                }
+                if(isset($errors['warning_phone'])){
+                    echo $errors['warning_phone'];
                 }
                 ?>
             </div>

@@ -7,7 +7,7 @@ if($_POST){
         $errors['name_required']="<div class='text-danger font-weight-bold'> Name Is Required </div>";
     }
     if(empty($_POST['memberNumber']) ){
-        $errors['memberNumber_required']="<div class='text-danger font-weight-bold'> Loan Amount Is Required </div>";
+        $errors['memberNumber_required']="<div class='text-danger font-weight-bold'> Number Required </div>";
     }
     
         if(empty($errors)){
@@ -44,11 +44,12 @@ if($_POST){
         <div class="col-12 text-center h1">
           Clue
         </div>
-        <div class="col-4 offset-4">
+        <div class="col-4 offset-4 mt-5">
             <form action="" method="post">
             <div class="form-group ">
                 <label for="name">Your Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="<?php echo(isset($_POST['name'])?  $_POST['name'] : ''  )?>" placeholder=" " aria-describedby="helpId">
+                <p class='text-primary h6'> Clue Subscription Starts With <strong>10,000 LE</strong> </p>
                 <?php 
                 if(isset($errors['name_required'])){
                     echo $errors['name_required'];
@@ -59,6 +60,7 @@ if($_POST){
             <div class="form-group ">
                 <label for="loanYears">Number Of Family Member</label>
                 <input type="number" name="memberNumber" id="memberNumber" class="form-control" value="<?php echo(isset($_POST['loanYears'])?  $_POST['loanYears'] : ''  )?>">
+                <p class='text-primary h6'> Cost Of Each Member <strong>2500 LE</strong> </p>
                 <?php 
                 if(isset($errors['memberNumber_required'])){
                     echo $errors['memberNumber_required'];

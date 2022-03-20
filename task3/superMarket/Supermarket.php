@@ -6,28 +6,31 @@ $cities=[
     'Alex'=>50,
     'Other'=>100
 ];
-$products=[
-    [],
-];
+
 
 if($_POST){
-    
-    $errors=[];
+    //first inputs in form
+    $errors1=[];
     if(empty($_POST['name']) ){
-        $errors['name_required']="<div class='text-danger font-weight-bold'> Name Is Required </div>";
+        $errors1['name_required']="<div class='text-danger font-weight-bold'> Name Is Required </div>";
     }
     if(empty($_POST['numberVarieties']) ){
-        $errors['numberVarieties_required']="<div class='text-danger font-weight-bold'> Number of Varieties Is Required </div>";
+        $errors1['numberVarieties_required']="<div class='text-danger font-weight-bold'> Number of Varieties Is Required </div>";
     }
     if(($_POST['numberVarieties']<=0)|| ( is_numeric ($_POST['name']))){
-        $errors['error-credentials']= "<div class='text-danger font-weight-bold my-1'>These Credentials are warning </div>";
+        $errors1['error-credentials']= "<div class='text-danger font-weight-bold my-1'>These Credentials are warning </div>";
 
     }
-    if(empty($errors)){
-
-       
+    if(empty($errors1)){      
 
     }
+     //sec inputs in form 
+     $errors2=[];
+    //  if(empty($_POST['name']) ){
+    //     $errors1['name_required']="<div class='text-danger font-weight-bold'> Name Is Required </div>";
+    // }
+
+
 
 }
 
@@ -61,20 +64,20 @@ if($_POST){
                 <label for="name">Enter Your name</label>    
                 <input type="text" name="name" id="name" class="form-control" value="<?php echo(isset($_POST['name'])?  $_POST['name'] : ''  )?>" >
                <?php
-                if(isset($errors['name_required'])){
-                    echo $errors['name_required'];
+                if(isset($errors1['name_required'])){
+                    echo $errors1['name_required'];
                 }
                 ?>
             </div>
 
             <div class="form-group col-6 offset-3 ">
             <label for="numberVarieties"> City</label>
-            <select class="form-select form-select-lg mb-3 w-100 p-2" aria-label="Default select example">
+            <select class="form-select form-select-lg mb-3 w-100 p-2" name="city" aria-label="Default select example">
             <?php
             
             foreach($cities as $key => $value){
                 ?>
-                <option value="<?= $value?>" ><?= $key ?></option>
+                <option value="<?= $value?>" name="city" <?php if(isset($_POST['city'])){ if($_POST['city']==$value)echo 'selected'; }  ?>><?= $key ?></option>
 
             <?php }?>
 
@@ -86,11 +89,11 @@ if($_POST){
             <label for="numberVarieties"> Enter Number of Varieties</label>    
             <input type="number" name="numberVarieties" id="numberVarieties" class="form-control"  value="<?php echo(isset($_POST['numberVarieties'])?  $_POST['numberVarieties'] : ''  )?>" >
             <?php
-            if(isset($errors['numberVarieties_required'])){
-                echo $errors['numberVarieties_required'];
+            if(isset($errors1['numberVarieties_required'])){
+                echo $errors1['numberVarieties_required'];
             }
-            if(isset($errors['error-credentials'])){
-                echo $errors['error-credentials'];
+            if(isset($errors1['error-credentials'])){
+                echo $errors1['error-credentials'];
             }
             ?>
             </div>
@@ -99,11 +102,14 @@ if($_POST){
             <button class="btn btn-outline-dark rounded mb-2"> Enter Proudects </button>
             </div>
             <?php 
-
-            if( isset($_POST['name']) && isset($_POST['numberVarieties' ] ) && empty($errors)   ){
+//  if( isset($_POST['name']) && isset($_POST['numberVarieties' ] ) && empty($errors1)   )
+            if( isset($_POST['numberVarieties' ]) && empty($errors1)   ){
+               
                 $numberOfRows=$_POST['numberVarieties'];
+                //(isset($_POST['submitForm2'])? 'hidden' :'')
                 ?>
-                <table class="table table-striped table-hover">
+                <div class="<?=(isset($_POST['submitForm2'])? 'd-none' :'');?> ">
+                <table class="table table-striped table-hover  " >
                     <thead>
                         <tr>
                             <th>
@@ -113,13 +119,13 @@ if($_POST){
                             Prouduct Price
                             </th>
                             <th>
-                            productQuestion
+                            Product Question
                             </th>
                         </tr>
                     </thead>
                 <tbody> 
                  <?php  
-                 for($i=1;$i<= $numberOfRows;$i++){
+                 for($i=0;$i< $numberOfRows;$i++){
                      $prouductName="p{$i}";
                      $prouductPrice="pPrice{$i}";
                      $productQuestion="pQuestion{$i}";
@@ -127,13 +133,13 @@ if($_POST){
 
                  <tr>
                    <td>                     
-                   <input type="text" name="<?= $prouductName ?>" id="<?= $prouductName?>" class="form-control" value="<?php echo(isset($_POST[$prouductName])?  $_POST[$prouductName] : ''  )?>"   >
+                   <input type="text" name="<?= $prouductName ?>" id="<?= $prouductName?>" class="form-control" value="<?php echo(isset($_POST[$prouductName])?  $_POST[$prouductName] : ''  )?>"   <?php echo(isset($_POST[$prouductName])? 'disabled' : ''  )?>>
                    </td>
                    <td>                     
-                   <input type="number" name="<?= $prouductPrice ?>" id="<?= $prouductPrice?>" class="form-control"  value="<?php echo(isset($_POST[$prouductPrice])?  $_POST[$prouductPrice] : ''  )?>"   >
+                   <input type="number" name="<?= $prouductPrice ?>" id="<?= $prouductPrice?>" class="form-control"  value="<?php echo(isset($_POST[$prouductPrice])?  $_POST[$prouductPrice] : ''  )?>"    <?php echo(isset($_POST[$prouductName])? 'disabled' : ''  )?>>
                    </td>
                    <td>                     
-                   <input type="number" name="<?= $productQuestion ?>" id="<?= $productQuestion ?>" class="form-control"    value="<?php echo(isset($_POST[$productQuestion])?  $_POST[$productQuestion] : ''  )?>"  >
+                   <input type="number" name="<?= $productQuestion ?>" id="<?= $productQuestion ?>" class="form-control"    value="<?php echo(isset($_POST[$productQuestion])?  $_POST[$productQuestion] : ''  )?>"  <?php echo(isset($_POST[$prouductName])? 'disabled' : ''  )?> >
                    </td>
                  </tr>
 
@@ -141,13 +147,135 @@ if($_POST){
                 </tbody>
                 </table>
                 <div class="form-group text-center  ">
-            <button class="btn btn-outline-dark rounded mb-2"> Receipt</button>
+            <button class="btn btn-outline-dark rounded mb-2" name="submitForm2"> Receipt</button>
             </div>
 
 
            <?php  }?>
+                 </div>
+                 <?php
+                 if(isset($_POST['submitForm2'])){?>
+                        <p class="h2 text-center">Simple Invoice</p>
+                    <table class="table table-striped table-hover  " >
+                    <thead>
+                        <tr>
+                            <th>
+                            Prouduct Name
+                            </th>
+                            <th>
+                            Prouduct Price
+                            </th>
+                            <th>
+                            Product Question
+                            </th>
+                            <th>
+                                Sub Total
+                          </th>
+                        </tr>
+                    </thead>
+                <tbody> 
+                    <?php 
+                   $Total=0;
+                    for($p=0 ; $p< $numberOfRows;$p++){  ?>
+                    <tr>
+                        <td><?= $_POST["p{$p}"]?></td>
+                        <td><?= $_POST["pPrice{$p}"]?></td>
+                        <td><?= $_POST["pQuestion{$p}"]?></td>
+                        <td><?php
+                        echo $subTotal=$_POST["pPrice{$p}"]*$_POST["pQuestion{$p}"];
+                        $Total+=$subTotal?></td>
+                    </tr>
+                    <?php }
+                    ?>
+                    <tr>
+                        <td colspan=4><hr></td></tr>
+                    <tr>
+                        <th colspan=3>
+                            Clint Name
+                        </th>
+                        <td >
+                        <?= $_POST['name'];?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan=3>
+                           Total
+                        </th>
+                        <td >
+                        <?= $Total;?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan=3>
+                         Discount
+                        </th>
+                        <td >
+                       <?php
+                       if($Total<=1000){
+                           $discount=0;
+                       }
+                       elseif($Total<=3000 && $Total>1000){
+                        $discount=0.1;
+                    }
+                    elseif($Total<=4500 && $Total>3000){
+                        $discount=0.15;
+                    }
+                    else{
+                        $discount=0.2;
+                    }
+                    $discountPrice=$Total*$discount;
+                    echo $discountPrice;
+                       ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan=3>
+                           Price After Discount
+                        </th>
+                        <td >
+                        <?php 
+                        $PriceAfterDiscount=$Total-$discountPrice;
+                        echo $PriceAfterDiscount;?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan=3>
+                            Delivery
+                        </th>
+                        <td >
+                        <?php
+                        $deliv=0;
+                        foreach($cities as $city=> $value){
+                            if($_POST['city']==$value){
+                                echo $deliv+=$value;
+                            }
+                        }
+                        
+                        ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan=3>
+                            Net Total
+                        </th>
+                        <td >
+                        <?= $PriceAfterDiscount + $deliv?>
+                        </td>
+                    </tr>
+                 </tbody> 
+                 </table>
+
+
+                <?php }
+                 
+
+                
+                 ?>
            
             </form>
+
+
+
         </div>
     </div>
 </div>

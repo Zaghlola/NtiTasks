@@ -46,7 +46,8 @@ session_start();
 
     ]
 
-    ]; $questionReview=[];
+    ];
+     $questionReview=[];
     foreach($review as $keys =>$questions){
         foreach($questions as $key =>$question){
            
