@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include_once "vendor/autoload.php"
 ?>
 <!doctype html>

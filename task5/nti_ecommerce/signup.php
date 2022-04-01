@@ -1,18 +1,22 @@
 <?php
 $title = 'Sign Up';
+use app\models\User;
+use app\helpers\Hash;
+// use app\mail\verificationMail;
+// use app\mail\verificationMail;
+use app\mail\verificationMail;
+use app\requests\RegisterRequest;
+
+
 include_once "layouts/header.php";
 include_once "layouts/nav.php";
 include_once "layouts/breadcrumb.php";
 
-use app\helpers\Hash;
-use app\models\User;
-use app\requests\RegisterRequest;
-
 $registerRequest = new RegisterRequest;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-   
-    $errors=[];
+
+    $errors = [];
     $registerRequest->setEmail($_POST['email']);
     $registerRequest->emailValidation();
     $registerRequest->setPhone($_POST['phone']);
@@ -21,27 +25,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $registerRequest->passwordValidation();
     $registerRequest->setPassword_confirmation($_POST['password_confirmation']);
     $registerRequest->passwordConirmationValidation();
-    
+
     if (empty($registerRequest->errors())) {
-        $verificationCode =rand(10000,99999) ;
+        $verificationCode = rand(10000, 99999);
         $hashedPassword = Hash::make($_POST['password']);
-        $user =new User;
+        $user = new User;
         $result = $user->setfirst_name($_POST['first_name'])
-        ->setLast_name($_POST['last_name'])
-        ->setEmail($_POST['email'])
-        ->setPhone($_POST['phone'])
-        ->setPassword($hashedPassword)
-        ->setVerification_code($verificationCode)
-        ->create();
+            ->setLast_name($_POST['last_name'])
+            ->setEmail($_POST['email'])
+            ->setPhone($_POST['phone'])
+            ->setPassword($hashedPassword)
+            ->setVerification_code($verificationCode)
+            ->create();
 
-        if($result){
-            echo 'ok';
-
-        }else{
+        if ($result) {
+            $subject = 'verfication Code';
+            $body = "<div>
+                    <p> Hello {$_POST['first_name']} {$_POST['last_name']}</p>
+                    <p>Your Verifiction Code :<strong>{$verificationCode}</strong></p>
+                    </div>";
+            $verificationMail = new verificationMail($_POST['email'], $subject, $body);
+            $verificationMailResult = $verificationMail->send();
+            
+            if ($verificationMailResult) {               
+                header('location:check-code.php');
+                die;
+            } else {
+                $errors['mail'] = 'somthing went wrong';
+            }
+        } else {
             $errors['insert'] = 'somthing wrong';
         }
-        
-
     }
 }
 
@@ -63,27 +77,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="login-form-container">
                                 <div class="login-register-form">
                                     <?php
-                                    if(!empty($errors)){
-                                        foreach($errors as $error){
+                                    if (!empty($errors)) {
+                                        foreach ($errors as $error) {
                                             echo "<div class='alert alert-danger'><strong>{$error}</strong></div>";
                                         }
                                     }
-                                    
+
                                     ?>
-                                    <form action="#" method="post">
-                                        <input type="text" name="first_name" placeholder="First Name" value ="<?= old('first_name')?>">
-                                        <input type="text" name="last_name" placeholder="Last Name" value ="<?= old('last_name')?>">
-                                        <input type="tel" name="phone" placeholder="Phone" value ="<?= old('phone')?>">
-                                        <?= $registerRequest->getErrorMessage('phone')?>
-                                        <input name="email" placeholder="Email" type="email" value ="<?= old('email')?>">
-                                        <?= $registerRequest->getErrorMessage('email')?>
-                                        <input type="password" name="password" placeholder="Password" >
-                                        <?= $registerRequest->getErrorMessage('password')?>
-                                        <input type="password" name="password_confirmation" placeholder="Password Confirmation" >
-                                        <?= $registerRequest->getErrorMessage('password_confirmation')?>
+                                    <form  method="post">
+                                        <input type="text" name="first_name" placeholder="First Name" value="<?= old('first_name') ?>">
+                                        <input type="text" name="last_name" placeholder="Last Name" value="<?= old('last_name') ?>">
+                                        <input type="tel" name="phone" placeholder="Phone" value="<?= old('phone') ?>">
+                                        <?= $registerRequest->getErrorMessage('phone') ?>
+                                        <input name="email" placeholder="Email" type="email" value="<?= old('email') ?>">
+                                        <?= $registerRequest->getErrorMessage('email') ?>
+                                        <input type="password" name="password" placeholder="Password">
+                                        <?= $registerRequest->getErrorMessage('password') ?>
+                                        <input type="password" name="password_confirmation" placeholder="Password Confirmation">
+                                        <?= $registerRequest->getErrorMessage('password_confirmation') ?>
                                         <select>
-                                            <option <?= old('gender')=='m'? 'selected' : ''?> value="m">Male</option>
-                                            <option <?= old('gender')=='f'? 'selected' : ''?> value="f">Female</option>
+                                            <option <?= old('gender') == 'm' ? 'selected' : '' ?> value="m">Male</option>
+                                            <option <?= old('gender') == 'f' ? 'selected' : '' ?> value="f">Female</option>
                                         </select>
                                         <div class="button-box mt-3">
                                             <button type="submit"><span><?= $title ?></span></button>

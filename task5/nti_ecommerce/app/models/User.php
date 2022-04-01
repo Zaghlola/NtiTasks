@@ -339,5 +339,17 @@ class User extends connection implements crud{
         return $this->dqlquery($query);
         
     }
+    
+    public function checkCode(){
+        $query="SELECT * FROM `users` WHERE `verification_code`={$this->verification_code} AND `email` ='{$this->email}' ";
+        return $this->dqlquery($query);
+
+    }
+    public function verifyUser(){
+        $query="UPDATE  `users` SET `email_verified_at`='".date('Y-m-d H:i:s')."'WHERE `email` ='{$this->email}'" ;
+        return $this->dmlQuery($query);
+
+    }
+
 
 }

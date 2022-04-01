@@ -85,14 +85,15 @@ class RegisterRequest{
 
       return $this;
    }
-   public function passwordValidation(){
+   public function passwordValidation($regExpMessage="Minimum 8 and maximum 32 characters, at least one uppercase letter, one lowercase letter, one number and one special character"){
      
        if(empty($this->password)){
            $this->errors['password']['required']= 'Password Is Required';
        }else{
           if(!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/',
           $this->password)) {
-            $this->errors['password']['regex']= 'Minimum 8 and maximum 32 characters, at least one uppercase letter, one lowercase letter, one number and one special character';
+            $this->errors['password']['regex']= $regExpMessage;
+            // 'Minimum 8 and maximum 32 characters, at least one uppercase letter, one lowercase letter, one number and one special character';
           }
        }
       
